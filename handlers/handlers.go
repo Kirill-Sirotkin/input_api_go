@@ -44,9 +44,7 @@ func (h *RouteHandler) HandlePostTask(c echo.Context) error {
 
 	h.TaskLimiter <- true
 	go func() {
-		log.Printf("start time: %v", time.Now())
 		mockIOTask(task.Id, h.TaskMap)
-		log.Printf("end time: %v", time.Now())
 		<-h.TaskLimiter
 	}()
 
@@ -81,7 +79,7 @@ func mockIOTask(taskId uuid.UUID, taskMap *models.TaskMap) {
 
 	jsonData, err := json.MarshalIndent(mockDataFirstIOStep, "", "    ")
 	if err != nil {
-		log.Printf("%v", err)
+		log.Printf("Task processing error: %v", err)
 	}
 	os.WriteFile(filePath, jsonData, 0644)
 
@@ -94,7 +92,7 @@ func mockIOTask(taskId uuid.UUID, taskMap *models.TaskMap) {
 
 	jsonData, err = json.MarshalIndent(mockDataSecondIOStep, "", "    ")
 	if err != nil {
-		log.Printf("%v", err)
+		log.Printf("Task processing error: %v", err)
 	}
 	os.WriteFile(filePath, jsonData, 0644)
 
